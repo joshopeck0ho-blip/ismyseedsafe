@@ -18,6 +18,22 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
+app.get('/og-image', (req, res) => {
+  const svg = `<svg width="1200" height="630" xmlns="http://www.w3.org/2000/svg">
+    <rect width="1200" height="630" fill="#edeae2"/>
+    <rect x="0" y="0" width="1200" height="4" fill="#2e5e40"/>
+    <text x="600" y="200" text-anchor="middle" font-family="Georgia, serif" font-size="72" font-weight="bold" fill="#1a1a1a">Is My Seed Safe?</text>
+    <text x="600" y="280" text-anchor="middle" font-family="Arial, sans-serif" font-size="28" fill="#666">1 in 4 crypto wallet hacks trace back to</text>
+    <text x="600" y="320" text-anchor="middle" font-family="Arial, sans-serif" font-size="28" fill="#666">an insecure seed phrase.</text>
+    <rect x="480" y="380" width="240" height="56" rx="4" fill="#2e5e40"/>
+    <text x="600" y="415" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#ffffff" letter-spacing="2">CHECK MY SEED</text>
+    <text x="600" y="500" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" fill="#888">Free assessment in seconds</text>
+    <rect x="0" y="626" width="1200" height="4" fill="#2e5e40"/>
+  </svg>`;
+  res.setHeader('Content-Type', 'image/svg+xml');
+  res.send(svg);
+});
+
 app.post('/api/save', (req, res) => {
   const { seed } = req.body;
 
